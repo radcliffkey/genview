@@ -10,10 +10,31 @@ import uvicorn
 templates = Jinja2Templates(directory=str((Path(__file__).parent / 'templates').resolve()))
 
 
+async def call_generator(tmplText: str, data) -> str:
+    return f'*{tmplText}*'
+
+
 async def homepage(request):
     template = "index.html"
-    context = {"request": request}
-    return templates.TemplateResponse(template, context)
+
+    form = await request.form()
+    if form:
+        userTmplText = form.get('tmpl') or ''
+        userTmplData = form.get('indata') or '{}'
+        genText = await call_generator(userTmplText, userTmplData)
+        tmplArgs = {
+            'tmpl': userTmplText,
+            'indata': userTmplData,
+            'genresult': genText,
+        }
+    else:
+        tmplArgs = {
+            'tmpl': '',
+            'indata': '{}',
+            'genresult': ''
+        }
+    tmplArgs['request'] = request
+    return templates.TemplateResponse(template, tmplArgs)
 
 
 async def not_found(request, exc):
@@ -33,8 +54,9 @@ async def server_error(request, exc):
     context = {"request": request}
     return templates.TemplateResponse(template, context, status_code=500)
 
+
 app = Starlette(
-    routes=[Route("/", endpoint=homepage)],
+    routes=[Route("/", endpoint=homepage, methods=['GET', 'POST'])],
     exception_handlers={
         404: not_found,
         500: server_error

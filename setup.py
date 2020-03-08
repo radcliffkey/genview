@@ -24,7 +24,7 @@ setup(
     ],
 
     # Dependencies
-    install_requires=['Jinja2>=2.10', 'starlette>=0.13', 'requests>=2.20', 'uvicorn>=0.11'],
+    install_requires=['Jinja2>=2.10', 'starlette>=0.13', 'requests>=2.20', 'uvicorn>=0.11', 'python-multipart>=0.0.5'],
 
 
     packages=find_packages(exclude=['*.test', '*.test.*', 'test.*', 'test']),
