@@ -1,0 +1,5 @@
+{% for p in persons %}
+{{p|name|morph('Case=Nom', ref=loop.index)}} {{'sníst'|morph('Tense=Past', agr=loop.index)}} {{p.count|unitNum('knedlík')}}.
+{{p|name|morph('Case=Dat')}} se udělalo špatně.
+
+{% endfor %}

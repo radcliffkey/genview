@@ -1,0 +1,14 @@
+{
+  "persons": [
+    {
+      "name": "Lucie",
+      "count": 1
+    }, {
+      "name": "Franta",
+      "count": 3
+    }, {
+      "gkbId": "G352",
+      "count": 5
+    }
+  ]
+}

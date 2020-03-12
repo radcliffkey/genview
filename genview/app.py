@@ -22,20 +22,20 @@ gen_req_sess = requests.Session()
 gen_req_sess.auth = (str(settings.GEN_USER), str(settings.GEN_PASSWD))
 
 
-async def call_generator(tmplText: str, data) -> str:
+async def call_generator(tmpl_text: str, data) -> str:
     request = {
         'templates': [
             {
                 'id': 'genview',
-                'body': tmplText
+                'body': tmpl_text
             }
         ],
         'data': data
     }
     resp = gen_req_sess.post(GENERATOR_URL, json=request)
     resp.raise_for_status()
-    respDict = resp.json()
-    return respDict['article']
+    resp_dict = resp.json()
+    return resp_dict['article']
 
 
 async def homepage(request):
@@ -43,22 +43,22 @@ async def homepage(request):
 
     form = await request.form()
     if form:
-        userTmplText = form.get('tmpl') or ''
-        userTmplData = json.loads(form.get('indata')) or {}
-        genText = await call_generator(userTmplText, userTmplData)
-        tmplArgs = {
-            'tmpl': userTmplText,
-            'indata': json.dumps(userTmplData, ensure_ascii=False, indent=2),
-            'genresult': genText,
+        user_tmpl_text = form.get('tmpl') or ''
+        user_tmpl_data = json.loads(form.get('indata')) or {}
+        generated_text = await call_generator(user_tmpl_text, user_tmpl_data)
+        tmpl_args = {
+            'tmpl': user_tmpl_text,
+            'indata': json.dumps(user_tmpl_data, ensure_ascii=False, indent=2),
+            'genresult': generated_text,
         }
     else:
-        tmplArgs = {
+        tmpl_args = {
             'tmpl': '',
             'indata': '{}',
             'genresult': ''
         }
-    tmplArgs['request'] = request
-    return templates.TemplateResponse(template, tmplArgs)
+    tmpl_args['request'] = request
+    return templates.TemplateResponse(template, tmpl_args)
 
 
 async def not_found(request, exc):
@@ -86,7 +86,7 @@ app = Starlette(
         500: server_error
     },
     debug=settings.DEBUG,
-    middleware = [
+    middleware=[
         Middleware(GZipMiddleware)
     ]
 )
