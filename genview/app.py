@@ -11,7 +11,6 @@ from starlette.middleware.gzip import GZipMiddleware
 from starlette.routing import Route
 from starlette.templating import Jinja2Templates
 
-
 from genview import settings
 
 templates = Jinja2Templates(directory=str((Path(__file__).parent / 'templates').resolve()))
@@ -92,4 +91,4 @@ app = Starlette(
 )
 
 if __name__ == '__main__':
-    uvicorn.run(app, host='0.0.0.0', port=8000)
+    uvicorn.run(app, host='0.0.0.0', port=settings.GV_PORT)
