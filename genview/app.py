@@ -32,9 +32,18 @@ async def call_generator(tmpl_text: str, data) -> str:
         'data': data
     }
     resp = gen_req_sess.post(GENERATOR_URL, json=request)
-    resp.raise_for_status()
-    resp_dict = resp.json()
-    return resp_dict['article']
+
+    if 400 <= resp.status_code < 600:
+        try:
+            text = resp.json()['message']
+        except:
+            text = f'Error {resp.status_code} when calling generator service'
+    else:
+        try:
+            text = resp.json()['article']
+        except:
+            text = 'Could not read generator response'
+    return text
 
 
 async def homepage(request):
@@ -43,11 +52,18 @@ async def homepage(request):
     form = await request.form()
     if form:
         user_tmpl_text = form.get('tmpl') or ''
-        user_tmpl_data = json.loads(form.get('indata')) or {}
-        generated_text = await call_generator(user_tmpl_text, user_tmpl_data)
+        isDataOk = False
+        try:
+            user_tmpl_data_str = form.get('indata') or '{}'
+            user_tmpl_data = json.loads(user_tmpl_data_str)
+            isDataOk = True
+        except:
+            errorMsg = 'Invalid JSON data'
+
+        generated_text = await call_generator(user_tmpl_text, user_tmpl_data) if isDataOk else errorMsg
         tmpl_args = {
             'tmpl': user_tmpl_text,
-            'indata': json.dumps(user_tmpl_data, ensure_ascii=False, indent=2),
+            'indata': json.dumps(user_tmpl_data, ensure_ascii=False, indent=2) if isDataOk else user_tmpl_data_str,
             'genresult': generated_text,
         }
     else:
