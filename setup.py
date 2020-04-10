@@ -8,7 +8,7 @@ from setuptools import find_packages, setup
 
 setup(
     name='genview',
-    version='0.2.0',
+    version='0.3.0',
 
     author='Radoslav Klic',
     description='Simple test environment for Geneea generator',
@@ -24,7 +24,9 @@ setup(
     ],
 
     # Dependencies
-    install_requires=['Jinja2>=2.10', 'starlette>=0.13', 'requests>=2.20', 'uvicorn>=0.11', 'python-multipart>=0.0.5'],
+    install_requires=[
+        'Jinja2>=2.10', 'starlette>=0.13', 'aiohttp>=3.6', 'uvicorn>=0.11', 'python-multipart>=0.0.5', 'ujson>=2.0'
+    ],
 
 
     packages=find_packages(exclude=['*.test', '*.test.*', 'test.*', 'test']),
