@@ -1,3 +1,7 @@
+# REPO HAS MOVED
+
+Current code now resides at https://bitbucket.org/geneea/genview.
+
 # genview
 
 View results of Geneea Generator
